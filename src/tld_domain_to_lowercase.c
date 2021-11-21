@@ -30,8 +30,6 @@
  * UTF-8.
  */
 
-#include "stdafx.h"
-
 #include "libtld/tld.h"
 #include "tld_data.h"
 #if defined(MO_DARWIN)
