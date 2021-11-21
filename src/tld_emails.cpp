@@ -20,6 +20,7 @@
  * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 #include "libtld/tld.h"
 
 // C lib
@@ -296,19 +297,13 @@ namespace
  */
 void trim(std::string& value)
 {
-    if(!value.empty())
-    {
-        size_t i(value.length());
-        for(; i > 0; --i)
-        {
-            const char c(value[i - 1]);
-            if(c != ' ' && c != '\r' && c != '\n' && c != '\t')
-            {
-                break;
-            }
-        }
-        value.resize(i);
-    }
+	constexpr std::string_view whitespaces(" \t\n\r");
+
+	const std::size_t found = value.find_last_not_of(whitespaces);
+	if (found != std::string::npos)
+		value.erase(found + 1);
+	else
+		value.clear(); // str is all whitespace
 }
 
 /** \brief Check whether a character can be quoted.
