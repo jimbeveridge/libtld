@@ -1316,13 +1316,15 @@ tld_result tld_email_list::tld_email_t::parse(std::string const & email)
     // (i.e. proper characters, structure, and TLD)
     // for that step we use the lowercase version
     //
-    struct tld_info info;
     std::unique_ptr<char, void(*)(char *)> lowercase_domain(tld_domain_to_lowercase(domain.c_str()), reinterpret_cast<void(*)(char *)>(&::free));
+#ifndef TLD_EMAILS_DISABLE_TLD_CHECK
+    struct tld_info info;
     tld_result result(tld(lowercase_domain.get(), &info));
     if(result != TLD_RESULT_SUCCESS)
     {
         return result;
     }
+#endif // TLD_EMAILS_DISABLE_TLD_CHECK
 
     // EX-193 and EX-185: email must not have whitespace in it!
     //
