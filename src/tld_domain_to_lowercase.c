@@ -259,9 +259,9 @@ static int tld_byte_out(char **s, int *max_length, char byte)
 
         **s = '%';
         ++*s;
-        **s = tld_dec2hex(((unsigned char) byte) >> 4);
+        **s = (char)tld_dec2hex(((unsigned char) byte) >> 4);
         ++*s;
-        **s = tld_dec2hex(byte & 15);
+		**s = (char)tld_dec2hex(byte & 15);
         ++*s;
     }
     else
@@ -315,17 +315,17 @@ static wint_t tld_mbtowc(const char **s)
             /* return upper ASCII characters as lowercase characters
              * (no need for complex tolower() in this case)
              */
-            return c | 0x20;
+			return (wint_t)(c | 0x20);
         }
         /* return '\0' once end of string is reached */
-        return c;
+		return (wint_t)c;
     }
 
     if(c >= 0xF0)
     {
         if(c >= 0xF8)
         {
-            return -1;
+			return (wint_t)-1;
         }
         wc = c & 0x07;
         cnt = 3;
@@ -342,7 +342,7 @@ static wint_t tld_mbtowc(const char **s)
     }
     else
     {
-        return -1;
+		return (wint_t)-1;
     }
 
     for(; cnt > 0; --cnt)
@@ -351,11 +351,11 @@ static wint_t tld_mbtowc(const char **s)
         c = tld_byte_in(s);
         if(c == '\0')
         {
-            return -1;
+			return (wint_t)-1;
         }
         if(c < 0x80 || c > 0xBF)
         {
-            return -1;
+			return (wint_t)-1;
         }
         wc = (wc << 6) | (c & 0x3F);
     }
